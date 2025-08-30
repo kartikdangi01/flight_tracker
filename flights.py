@@ -5,6 +5,7 @@ from datetime import datetime, timedelta
 import smtplib
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
+import re
 
 # Email config
 SMTP_SERVER = os.getenv("SMTP_SERVER")
@@ -90,7 +91,8 @@ def check_flights():
             )
             for flight in result.flights:
                 if flight.price != 'Price unavailable':
-                    price_num = int(flight.price.replace('₹', '').replace(',', ''))
+                    price_str = flight.price.strip()
+                    price_num = int(re.sub(r'[^\d]', '', price_str))
                     all_flights_data.append({
                         'date': date,
                         'price_num': price_num,
