@@ -1,1 +1,2 @@
 fast_flights==2.2
+psycopg2-binary
