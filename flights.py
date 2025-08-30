@@ -70,7 +70,9 @@ def set_lowest_price(date, price):
     INSERT INTO lowest_prices(date, price) VALUES (%s, %s)
     ON CONFLICT(date) DO UPDATE SET price=EXCLUDED.price
     """, (date, price))
+
     conn.commit()
+    print(f"✅ Successfully set lowest price for {date}: ₹{price:,}")
 
 def check_flights():
     print(f"\nFlight Search - {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
@@ -123,8 +125,11 @@ def check_flights():
             elif current_lowest < previous_lowest:
                 print(f"🔥 PRICE DROP for {date}! Old: ₹{previous_lowest:,} → New: ₹{current_lowest:,}")
                 email_price_drops[date] = {'old_price': previous_lowest, 'new_price': current_lowest}
+            else:
+                print(f"ℹ️ No price drop for {date}. Current: ₹{current_lowest:,}, Previous: ₹{previous_lowest:,}")
 
-            set_lowest_price(date, current_lowest)
+            if previous_lowest is None or current_lowest < previous_lowest:
+                set_lowest_price(date, current_lowest)
 
     if email_price_drops:
         send_price_drop_email(email_price_drops)
