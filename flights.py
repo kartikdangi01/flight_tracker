@@ -92,14 +92,15 @@ def check_flights():
             for flight in result.flights:
                 if flight.price != 'Price unavailable':
                     price_str = flight.price.strip()
-                    price_num = int(re.sub(r'[^\d]', '', price_str))
+                    numeric_str = price_str[1:].replace(',', '').strip()
+                    price_num = int(numeric_str) * 85
                     all_flights_data.append({
                         'date': date,
                         'price_num': price_num,
                         'departure': flight.departure,
                         'arrival': flight.arrival,
                         'stops': flight.stops,
-                        'price': flight.price
+                        'price': price_num
                     })
         except Exception as e:
             print(f"Error fetching flights for {date}: {e}")
