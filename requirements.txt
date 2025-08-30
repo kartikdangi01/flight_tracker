@@ -1,0 +1,2 @@
+fast_flights==2.2
+APScheduler==3.10.4
